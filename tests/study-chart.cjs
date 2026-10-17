@@ -18,7 +18,7 @@ console.log('PASS: daily aggregation, future/invalid data, zero state, leap year
 
 async function browserTests(){
  const {chromium}=require(process.env.ORBITA_PLAYWRIGHT_MODULE||'playwright');
- const allowed=new Set(['index.html','app.js','styles.css','auth.js','auth.css','study-chart.js','study-chart.css','vendor/supabase-2.118.0.js']);
+ const allowed=new Set(['index.html','app.js','styles.css','auth.js','auth.css','study-chart.js','study-chart.css','courses.js','courses.css','vendor/supabase-2.118.0.js']);
  const server=http.createServer((req,res)=>{const file=new URL(req.url,'http://localhost').pathname.slice(1)||'index.html';if(file==='config.js'){res.setHeader('Content-Type','text/javascript');return res.end('window.ORBITA_CONFIG={enabled:false}');}if(!allowed.has(file)){res.writeHead(404);return res.end();}res.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':'text/html');res.end(fs.readFileSync(path.join(root,file)));});
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const origin='http://127.0.0.1:'+server.address().port;
  const browser=await chromium.launch({channel:'msedge',headless:true});

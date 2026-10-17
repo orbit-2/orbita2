@@ -35,7 +35,17 @@ Os dados locais são separados por conta. O histórico anterior em `orbita2data`
 
 O botão de apagar dados limpa os estudos da conta e sincroniza essa ação; não exclui o usuário do Supabase. O usuário pode continuar sem conta, com armazenamento apenas no navegador.
 
-## Validação
+## Cursos e playlists
+
+A biblioteca permite buscar e filtrar cursos, importar uma prévia de playlist ou criar aulas manualmente. A importação preserva títulos editados e aulas concluídas. Aulas se conectam ao cronômetro, às tarefas, às notas e ao histórico por identificadores; o tempo salvo já entra no gráfico e na matéria. A conclusão da aula é explícita.
+
+`GET /api/youtube?list=ID` roda como função Node.js na Vercel. Sem configuração adicional, lê metadados disponíveis na página pública do YouTube. Essa leitura depende do formato e das restrições do YouTube: se houver continuação ou menos vídeos que o total informado, a prévia avisa que a lista é parcial. Playlists privadas e bloqueios externos retornam uma mensagem, com alternativa manual. Há um limite de 500 aulas por curso.
+
+Para usar a [YouTube Data API oficial](https://developers.google.com/youtube/data/reference/rest/v3/playlistItems/list), configure `YOUTUBE_API_KEY` apenas no ambiente de produção da Vercel e faça um novo deploy. A chave deve ter a YouTube Data API v3 habilitada e restrição de API correspondente. Nunca a coloque no JavaScript do navegador. Essa opção pagina os resultados em grupos de 50 até 500; está sujeita à cota do projeto Google. Não é necessário OAuth para ler playlists públicas. O endpoint aceita somente identificadores validados, usa destinos fixos, limites de tempo e cache de cinco minutos.
+
+`node tests/courses.cjs` verifica o parser, paginação, prévia, importação sem perda de progresso, vínculos entre abas, backups, temas e sete larguras de tela. Os testes de interface usam dados locais e transporte simulado; a leitura real foi conferida separadamente com uma playlist pública do MIT.
+
+## Testes
 
 O painel inicial inclui um gráfico diário com escalas semanal, mensal e anual, navegação entre períodos e exploração por toque, cursor ou teclado. Os totais vêm das sessões registradas; dias futuros não entram na média. A referência diária deriva da meta semanal e pode ser ocultada.
 

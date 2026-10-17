@@ -2,7 +2,7 @@
 const {chromium}=require(process.env.ORBITA_PLAYWRIGHT_MODULE||'playwright');
 const http=require('http'),fs=require('fs'),path=require('path'),assert=require('assert/strict');
 const ids=process.argv.slice(2);if(ids.length!==2||ids.some(x=>!(/^[\da-f-]{36}$/i.test(x))))throw Error('Pass exactly two disposable fixture UUIDs.');
-const root=path.resolve(__dirname,'..'),allowed=new Set(['index.html','app.js','styles.css','auth.js','auth.css','study-chart.js','study-chart.css','config.js','vendor/supabase-2.118.0.js']);
+const root=path.resolve(__dirname,'..'),allowed=new Set(['index.html','app.js','styles.css','auth.js','auth.css','study-chart.js','study-chart.css','courses.js','courses.css','config.js','vendor/supabase-2.118.0.js']);
 async function signin(page,id){await page.locator('#auth-form [name=email]').fill('orbita-qa-'+id+'@example.invalid');await page.locator('#auth-form [name=password]').fill('OrbitaQa!'+id.replaceAll('-',''));await page.getByRole('button',{name:'Entrar na minha conta',exact:true}).click();await page.waitForFunction(()=>!document.body.classList.contains('auth-locked'));await page.waitForFunction(()=>document.querySelector('[data-sync-status]')?.textContent==='Sincronizado');}
 (async()=>{
  const server=http.createServer((req,res)=>{const name=decodeURIComponent(new URL(req.url,'http://localhost').pathname).replace(/^\//,'')||'index.html';if(!allowed.has(name)){res.writeHead(404);return res.end();}res.setHeader('Content-Type',name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':'text/html');res.end(fs.readFileSync(path.join(root,name)));});await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const origin='http://127.0.0.1:'+server.address().port;
