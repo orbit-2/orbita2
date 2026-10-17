@@ -1,0 +1,27 @@
+.auth-screen{min-height:100dvh;display:grid;place-items:center;padding:32px 20px}
+body.auth-locked>.app,body.auth-locked>.mobilebar{display:none!important}
+.auth-layout{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:clamp(32px,7vw,110px);width:min(100%,1000px)}
+.auth-intro .brand{margin:0 0 40px;font-size:38px}
+.auth-intro h1{font-size:clamp(34px,4vw,52px);max-width:420px;line-height:1.13;margin-bottom:20px}
+.auth-intro p{max-width:390px;font-size:17px}
+.auth-points{display:grid;gap:16px;margin-top:28px;color:var(--muted)}
+.auth-points span{display:flex;align-items:center;gap:12px}.auth-points b{color:var(--accent2);font-size:20px}
+.auth-card{width:100%;padding:30px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 20px 80px #0002}
+.auth-card h2{font-size:26px;margin-bottom:6px}.auth-card form{margin-top:24px;display:grid;gap:17px}
+.auth-card label{display:grid;gap:7px;font-size:.9em;color:var(--muted)}
+.auth-card .btn{width:100%}.auth-card .link-button{width:auto}
+.password-field{position:relative}.password-field .field{padding-right:65px}
+.password-toggle{position:absolute;right:7px;top:6px;min-height:32px;border:0;border-radius:7px;padding:5px 7px;color:var(--muted);background:var(--surface2);font-size:12px}
+.link-button{background:transparent;border:0;color:var(--accent2);padding:8px 0;cursor:pointer;font:inherit;min-height:40px;text-align:left;text-decoration:underline;text-underline-offset:4px}
+.auth-meta{margin-top:20px;padding-top:18px;border-top:1px solid var(--border);font-size:.9em}
+.auth-message{margin-top:18px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:11px;overflow-wrap:anywhere;font-size:.9em}
+.auth-message[data-tone=error]{border-color:#c75a73}.auth-message[data-tone=success]{border-color:var(--accent2)}
+.account-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.sync-status{font-size:11px;max-width:140px;overflow-wrap:anywhere;color:var(--muted)}
+.account-banner{border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:18px;background:var(--surface)}
+.account-banner h2{font-size:18px;margin-bottom:7px}.account-banner .row{margin-top:12px}.account-banner p{font-size:.9em}
+.account-email{overflow-wrap:anywhere;font-size:.9em;color:var(--muted)}
+.account-card{margin-top:18px}.account-card h2{margin-bottom:8px}
+body.auth-locked .toast{bottom:24px}
+@media(max-width:750px){.auth-screen{padding:24px 16px;align-items:start}.auth-layout{grid-template-columns:1fr;gap:26px;max-width:440px}.auth-intro .brand{font-size:30px;margin-bottom:16px}.auth-intro h1{font-size:30px;margin-bottom:10px;max-width:none}.auth-intro p{font-size:15px}.auth-points{display:none}.auth-card{padding:22px}.account-controls .btn{font-size:11px;padding:8px 10px}.sync-status{max-width:110px}.top{flex-wrap:wrap}.auth-card h2{font-size:24px}}
+@media(prefers-reduced-motion:reduce){.auth-screen{scroll-behavior:auto}}
