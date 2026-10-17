@@ -176,7 +176,7 @@
       else banner.innerHTML='<h2>Seus estudos já estavam por aqui?</h2><p>Encontramos dados salvos neste navegador. Você pode adicioná-los à sua conta. Seus registros na nuvem serão preservados, e a cópia original continuará neste dispositivo.</p><div class="row"><button class="btn tiny" data-account-action="import-local">Adicionar meus estudos à conta</button><button class="btn tiny ghost" data-account-action="dismiss-import">Agora não</button></div>';
       $('#sections').prepend(banner);
     }
-    if(state.pendingRestore){$('#sections').querySelectorAll('.grid input,.grid button,.grid select,.grid textarea,.course-page input,.course-page button,.course-page select,.course-page textarea').forEach(el=>el.disabled=true);}
+    if(state.pendingRestore){$('#sections').querySelectorAll('.grid input,.grid button,.grid select,.grid textarea,.course-page input,.course-page button,.course-page select,.course-page textarea,.task-page input,.task-page button,.task-page select,.task-page textarea').forEach(el=>el.disabled=true);}
     $('#account-card')?.remove();
     if(page==='config'&&state.user){
       const card=document.createElement('section');card.id='account-card';card.className='card account-card full';card.innerHTML=`<h2>Sua conta</h2><p class="account-email">${esc(state.user.email||'')}</p><p>Seu planner é sincronizado entre seus dispositivos. O cronômetro em andamento fica neste dispositivo.</p><div class="row" style="margin-top:16px"><button class="btn tiny ghost" data-account-action="sync">Sincronizar agora</button><button class="btn tiny ghost" data-account-action="export">Exportar meus dados</button><button class="btn tiny ghost" data-account-action="logout">Sair da conta</button></div>`;$('#sections>.grid')?.prepend(card);
@@ -201,7 +201,8 @@
     for(const item of source.subjects){const existing=merged.subjects.find(s=>s.id===item.id);if(existing&&equal(existing,item)){remap.set(item.id,existing.id);continue;}const copy={...item,id:existing?id():item.id};remap.set(item.id,copy.id);merged.subjects.push(copy);}
     const courseRemap=new Map();
     for(const item of source.courses){const copy={...item,subject:remap.get(item.subject)||''};const existing=merged.courses.find(x=>x.id===copy.id);if(existing&&equal(existing,copy)){courseRemap.set(item.id,existing.id);continue;}if(existing)copy.id=id();courseRemap.set(item.id,copy.id);merged.courses.push(copy);}
-    for(const key of ['tasks','sessions','notes'])for(const item of source[key]){const copy={...item,subject:remap.get(item.subject)||''};if(copy.courseId)copy.courseId=courseRemap.get(copy.courseId)||copy.courseId;const existing=merged[key].find(x=>x.id===copy.id);if(existing&&equal(existing,copy))continue;if(existing)copy.id=id();merged[key].push(copy);}
+    const taskRemap=new Map();
+    for(const key of ['tasks','sessions','notes'])for(const item of source[key]){const copy={...item,subject:remap.get(item.subject)||''};if(copy.courseId)copy.courseId=courseRemap.get(copy.courseId)||copy.courseId;if(copy.taskId)copy.taskId=taskRemap.get(copy.taskId)||copy.taskId;const existing=merged[key].find(x=>x.id===copy.id);if(existing&&equal(existing,copy)){if(key==='tasks')taskRemap.set(item.id,existing.id);continue;}if(existing)copy.id=id();if(key==='tasks')taskRemap.set(item.id,copy.id);merged[key].push(copy);}
     if(!db.name)merged.name=source.name;
     applyData(merged,{keepTimer:true});if(!persist())return;
     localStorage.setItem(KEY+':imported:'+state.user.id,'yes');state.importChoice=false;render();notice('Estudos adicionados à conta. A cópia original foi preservada.');

@@ -47,6 +47,12 @@ Para usar a [YouTube Data API oficial](https://developers.google.com/youtube/dat
 
 ## Testes
 
+A aba Tarefas agrupa os registros por matéria e mantém os que não têm matéria em Geral. Há busca por tarefa ou referência, filtros por status e prazo e progresso por matéria. Cada tarefa aceita até 12 referências (livro, aula, artigo, link ou outro), com título, detalhes como capítulo/páginas e link opcional. Também é possível vincular uma aula cadastrada no Órbita.
+
+As referências acompanham a tarefa no Foco. O tempo salvo mantém o vínculo com a tarefa e alimenta o gráfico e a matéria; a conclusão é explícita. Quando a tarefa está vinculada a uma aula, concluir ou reabrir atualiza o progresso correspondente do curso. Referências e vínculos são preservados nos backups e na sincronização, incluindo importações com IDs conflitantes.
+
+`node tests/tasks.cjs` verifica criação e edição, referências, limites e links seguros, agrupamento e filtros, Foco, conclusão de aulas, persistência, backups e a interface em sete larguras de tela.
+
 O painel inicial inclui um gráfico diário com escalas semanal, mensal e anual, navegação entre períodos e exploração por toque, cursor ou teclado. Os totais vêm das sessões registradas; dias futuros não entram na média. A referência diária deriva da meta semanal e pode ser ocultada.
 
 Execute `node tests/study-chart.cjs` para verificar a agregação, anos bissextos, mudanças de período, interação, temas e responsividade. Os testes também conferem o tamanho mínimo dos campos no mobile para evitar a ampliação automática do Safari. A validação no aparelho físico continua recomendada.
