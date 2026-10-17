@@ -49,6 +49,23 @@ body[data-motion=off] *,body[data-motion=off] *:before,body[data-motion=off] *:a
 @media(max-width:750px){.mobilebar{gap:0}.mobilebar button{flex:1 0 44px;min-width:44px;font-size:10px}}
 @media(max-width:360px){.theme-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.top{flex-wrap:wrap}h1{font-size:27px}.card{padding:15px}}
 
+/* Scrollbars follow the selected atmosphere, including light themes. */
+:root{--scroll-thumb:color-mix(in srgb,var(--muted) 38%,var(--surface));--scroll-hover:color-mix(in srgb,var(--accent) 65%,var(--surface))}
+*{scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track,::-webkit-scrollbar-corner{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border:2px solid var(--surface);border-radius:999px}
+::-webkit-scrollbar-thumb:hover{background:var(--scroll-hover)}
+::-webkit-scrollbar-button{display:none;width:0;height:0}
+.sidebar{scrollbar-gutter:stable;overscroll-behavior-y:contain}
+@media(min-width:751px) and (max-height:760px){
+.sidebar{padding-top:18px;padding-bottom:12px}
+.brand{margin-bottom:20px}
+.nav{gap:3px}
+.nav button{min-height:44px;padding-top:8px;padding-bottom:8px}
+.sidebar-foot{font-size:11px;padding:10px}
+}
+@media(forced-colors:active){*{scrollbar-color:auto}}
 </style></head><body><div class="app"><aside class="sidebar"><div class="brand">✧ órbita<i>.</i><small>SEU UNIVERSO DE ESTUDOS</small></div><nav class="nav" id="nav"></nav><div class="sidebar-foot">✦ Um pequeno avanço, todos os dias.<br><br>Dados salvos neste navegador.</div></aside><main class="main"><header class="top"><div><div class="kicker" id="greeting">CENTRO DE CONTROLE</div><h1 id="heading">Seu espaço para evoluir.</h1><p id="subtitle">Organize seus estudos, no seu ritmo.</p></div><button class="btn ghost" onclick="go('config')">⚙ Personalizar</button></header><div id="sections"></div></main></div><nav class="mobilebar" id="mobilebar"></nav><div id="toast" class="toast hidden" role="status" aria-live="polite"></div><dialog id="editor" aria-labelledby="editor-title"></dialog><script>
 const KEY = 'orbita2data';
 const defaults = {name:'', theme:'cosmos', radius:20, density:1, weekly:15,
@@ -242,7 +259,7 @@ Object.assign(themes,{
 });
 const themeNames={cosmos:'Cosmos',aurora:'Aurora',sunset:'Pôr do sol',paper:'Papel',ocean:'Oceano',forest:'Floresta',lavender:'Lavanda',rose:'Rosé',sand:'Areia',graphite:'Grafite',midnight:'Meia-noite',matcha:'Matcha'};
 function readableInk(hex){const rgb=hex.slice(1).match(/../g).map(v=>{const n=parseInt(v,16)/255;return n<=.04045?n/12.92:((n+.055)/1.055)**2.4;});const l=.2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2];return (l+.05)/.05>=1.05/(l+.05)?'#101020':'#ffffff';}
-function applyTheme(){const t=themes[db.theme]||themes.cosmos;['bg','surface','surface2','text','muted','border','accent','accent2'].forEach((k,i)=>document.documentElement.style.setProperty('--'+k,t[i]));if(color(db.accent))document.documentElement.style.setProperty('--accent',db.accent);document.documentElement.style.setProperty('--radius',db.radius+'px');document.documentElement.style.setProperty('--density',db.density);document.documentElement.style.setProperty('--font-size',db.fontSize+'px');document.documentElement.style.setProperty('--button-ink',readableInk(db.accent||t[6]));document.body.dataset.background=db.background;document.body.dataset.motion=db.motion?'on':'off';document.querySelector('meta[name="theme-color"]').content=t[0];}
+function applyTheme(){const t=themes[db.theme]||themes.cosmos;['bg','surface','surface2','text','muted','border','accent','accent2'].forEach((k,i)=>document.documentElement.style.setProperty('--'+k,t[i]));if(color(db.accent))document.documentElement.style.setProperty('--accent',db.accent);document.documentElement.style.setProperty('--radius',db.radius+'px');document.documentElement.style.setProperty('--density',db.density);document.documentElement.style.setProperty('--font-size',db.fontSize+'px');document.documentElement.style.setProperty('--button-ink',readableInk(db.accent||t[6]));document.body.dataset.background=db.background;document.body.dataset.motion=db.motion?'on':'off';document.querySelector('meta[name="theme-color"]').content=t[0];document.documentElement.style.colorScheme=readableInk(t[0])==='#ffffff'?'dark':'light';}
 function setTheme(t){if(!themes[t])return;db.theme=t;db.accent='';save();}
 function previewSetting(key,value){db[key]=Number(value);applyTheme();}
 function setFocusDuration(value){db.focusMinutes=Math.round(bounded(value,1,180,25));if(!seconds())focus.duration=db.focusMinutes*60;save();}
