@@ -66,3 +66,6 @@ body[data-motion=off] *,body[data-motion=off] *:before,body[data-motion=off] *:a
 .sidebar-foot{font-size:11px;padding:10px}
 }
 @media(forced-colors:active){*{scrollbar-color:auto}}
+/* Prevent Safari focus zoom without disabling user-controlled page zoom. */
+@media(max-width:750px){input,select,textarea{font-size:max(16px,1em)!important}}
+@supports(-webkit-touch-callout:none){input,select,textarea{font-size:max(16px,1em)!important}}

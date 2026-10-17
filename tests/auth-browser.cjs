@@ -1,7 +1,7 @@
 const {chromium}=require(process.env.ORBITA_PLAYWRIGHT_MODULE||'playwright');
 const http=require('http'),fs=require('fs'),path=require('path'),assert=require('assert/strict');
 const root=path.resolve(__dirname,'..');
-const allowed=new Set(['index.html','app.js','styles.css','auth.js','auth.css','config.js','vendor/supabase-2.118.0.js']);
+const allowed=new Set(['index.html','app.js','styles.css','auth.js','auth.css','study-chart.js','study-chart.css','config.js','vendor/supabase-2.118.0.js']);
 const users={a:{id:'11111111-1111-4111-8111-111111111111',email:'a@example.invalid',aud:'authenticated',role:'authenticated',email_confirmed_at:new Date().toISOString(),user_metadata:{name:'Pessoa A'},app_metadata:{provider:'email',providers:['email']},identities:[],created_at:new Date().toISOString()},b:{id:'22222222-2222-4222-8222-222222222222',email:'b@example.invalid',aud:'authenticated',role:'authenticated',email_confirmed_at:new Date().toISOString(),user_metadata:{name:'Pessoa B'},app_metadata:{provider:'email',providers:['email']},identities:[],created_at:new Date().toISOString()}};
 const jwt=user=>[Buffer.from('{"alg":"HS256","typ":"JWT"}').toString('base64url'),Buffer.from(JSON.stringify({sub:user.id,aud:'authenticated',role:'authenticated',exp:Math.floor(Date.now()/1000)+3600,iat:Math.floor(Date.now()/1000),iss:'https://test.supabase.co/auth/v1'})).toString('base64url'),'test-signature'].join('.');
 const session=user=>({access_token:jwt(user),refresh_token:'refresh-'+user.id,expires_in:3600,token_type:'bearer',user});
@@ -46,7 +46,7 @@ async function signout(page){await page.evaluate(()=>go('config'));await page.lo
   const context=await browser.newContext();await context.route('https://*.supabase.co/**',api);const page=await context.newPage();page.setDefaultTimeout(12000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
   page.on('console',m=>{if(m.type()==='error')console.log('BROWSER ERROR:',m.text())});
   await page.goto(origin);await page.getByRole('heading',{name:'Bom ter você por aqui.'}).waitFor();
-  for(const width of [320,375,768,1440]){await page.setViewportSize({width,height:900});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));}
+  for(const width of [320,375,768,1440]){await page.setViewportSize({width,height:900});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));if(width<=750)assert(await page.locator('#auth-form input').evaluateAll(inputs=>inputs.every(input=>parseFloat(getComputedStyle(input).fontSize)>=16)),'Login fields must prevent Safari focus zoom');}
   await page.setViewportSize({width:1280,height:900});
   await page.locator('#auth-form [name=email]').fill('a@example.invalid');await page.locator('#auth-form [name=password]').fill('wrong');await page.getByRole('button',{name:'Entrar na minha conta',exact:true}).click();await page.locator('#auth-message:not(.hidden)').waitFor();console.log('Credential validation:',await page.locator('#auth-message').innerText());assert.match(await page.locator('#auth-message').innerText(),/E-mail ou senha incorretos/);assert(await page.locator('.app').isHidden());
   await signin(page,'a');assert.equal(await page.evaluate(()=>db.name),'Pessoa A');

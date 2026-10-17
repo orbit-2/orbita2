@@ -96,8 +96,7 @@ function dateLabel(value){return validDate(value)?new Date(value+'T12:00:00').to
 function home(){
   const week=thisWeek(), pending=orderedTasks(db.tasks.filter(t=>!t.done)), due=pending.filter(t=>t.due&&t.due<=today());
   const done=db.tasks.filter(t=>t.done).length;
-  const days=Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);return {label:d.toLocaleDateString('pt-BR',{weekday:'short'}).replace('.',''),date:localDate(d),minutes:sum(db.sessions.filter(s=>s.date===localDate(d)).map(s=>s.minutes))};});
-  const max=Math.max(60,...days.map(d=>d.minutes)), todayMinutes=days[6].minutes;
+  const todayMinutes=sum(db.sessions.filter(s=>s.date===today()).map(s=>s.minutes));
   const first=pending[0];
   return `<div class="grid">
     <div class="card full hero-card"><div class="section-label">${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})}</div>
@@ -105,12 +104,13 @@ function home(){
     <p>${started?'Seu tempo continua contando enquanto você organiza seus estudos.':first?`Próxima tarefa: <strong>${esc(first.title)}</strong>${first.due?' · '+dateLabel(first.due):''}.`:'Organize suas matérias, escolha uma tarefa e reserve um momento para aprender.'}</p>
     <button class="btn" onclick="go('${started?'timer':first?'tasks':db.subjects.length?'timer':'subjects'}')">${started?'Voltar à sessão →':first?'Organizar minhas tarefas →':db.subjects.length?'Começar uma sessão →':'Adicionar minha primeira matéria →'}</button>
     <div class="metric-row"><span><strong>${fmt(todayMinutes)}</strong> hoje</span><span><strong>${due.length}</strong> ${due.length===1?'tarefa para hoje ou atrasada':'tarefas para hoje ou atrasadas'}</span><span><strong>${db.subjects.length}</strong> ${db.subjects.length===1?'matéria':'matérias'}</span></div></div>
+    ${StudyChart.render(db.sessions,db.weekly)}
     <div class="card"><small>Tempo de estudo acumulado</small><div class="stat">${fmt(total())}</div><p class="small-text">Cada sessão conta na sua jornada.</p></div>
     <div class="card"><small>Meta desta semana</small><div class="stat">${fmt(week)}</div>${prog(pct(week,db.weekly*60))}<small>${pct(week,db.weekly*60)}% de ${db.weekly}h · segunda a domingo</small></div>
     <div class="card"><small>Tarefas concluídas</small><div class="stat">${done}<span class="muted-text" style="font-size:18px"> / ${db.tasks.length}</span></div>${prog(pct(done,db.tasks.length))}<small>Abra espaço para o próximo passo.</small></div>
-    <div class="card wide"><div class="row between"><h2>Seu ritmo de estudo</h2><span class="pill">Últimos 7 dias</span></div><div class="bars">${days.map(d=>`<div class="barcol"><div role="img" aria-label="${dateLabel(d.date)}: ${d.minutes} minutos" title="${dateLabel(d.date)} · ${d.minutes} min" style="height:${Math.max(3,d.minutes/max*110)}px"></div><span>${d.label}</span><small>${d.minutes} min</small></div>`).join('')}</div></div>
+
     <div class="card"><h2>Tempo por matéria</h2>${db.subjects.length?db.subjects.map(s=>({s,m:sum(db.sessions.filter(x=>x.subject===s.id).map(x=>x.minutes))})).sort((a,b)=>b.m-a.m).slice(0,4).map(({s,m})=>`<div class="subject-row"><div class="row between"><span>${esc(s.name)}</span><small>${fmt(m)}</small></div>${prog(pct(m,total()))}</div>`).join(''):empty('Cadastre suas matérias para acompanhar sua dedicação.')}</div>
-    <div class="card full"><div class="row between"><h2>Suas próximas tarefas</h2><button class="btn tiny ghost" onclick="go('tasks')">Ver todas →</button></div>${taskList(pending.slice(0,5),false)}</div>
+    <div class="card wide"><div class="row between"><h2>Suas próximas tarefas</h2><button class="btn tiny ghost" onclick="go('tasks')">Ver todas →</button></div>${taskList(pending.slice(0,5),false)}</div>
   </div>`;
 }
 

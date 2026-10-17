@@ -37,6 +37,10 @@ O botão de apagar dados limpa os estudos da conta e sincroniza essa ação; nã
 
 ## Validação
 
+O painel inicial inclui um gráfico diário com escalas semanal, mensal e anual, navegação entre períodos e exploração por toque, cursor ou teclado. Os totais vêm das sessões registradas; dias futuros não entram na média. A referência diária deriva da meta semanal e pode ser ocultada.
+
+Execute `node tests/study-chart.cjs` para verificar a agregação, anos bissextos, mudanças de período, interação, temas e responsividade. Os testes também conferem o tamanho mínimo dos campos no mobile para evitar a ampliação automática do Safari. A validação no aparelho físico continua recomendada.
+
 Os testes de interface usam Playwright com Microsoft Edge e um servidor HTTP temporário local. `tests/auth-browser.cjs` simula apenas o transporte Supabase, mantendo o SDK real, e cobre autenticação, recuperação PKCE, sincronização, conflitos, importação, contas distintas e navegação responsiva.
 
 Com `playwright@1.62.1` disponível no ambiente, execute `node tests/auth-browser.cjs`. Se o módulo estiver instalado fora do projeto, indique o caminho absoluto por `ORBITA_PLAYWRIGHT_MODULE`. O Microsoft Edge deve estar instalado; não é necessário baixar um navegador separado.
