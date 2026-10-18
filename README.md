@@ -47,6 +47,14 @@ Para usar a [YouTube Data API oficial](https://developers.google.com/youtube/dat
 
 ## Testes
 
+A aba Agenda reúne a grade semanal e uma sequência diária (padrão em telas pequenas). É possível criar compromissos únicos ou rotinas semanais em vários dias, definir um término opcional, alterar ou cancelar só uma ocorrência, editar a rotina completa, duplicar blocos e arrastá-los para abrir uma revisão do horário. A grade mantém os blocos sobrepostos acessíveis em colunas e o formulário avisa sobre conflitos na primeira semana da rotina antes de permitir uma sobreposição explícita.
+
+As tarefas podem ser agendadas pela lista ou pelo painel de tarefas da Agenda. Durante o Foco, continuam disponíveis a matéria e as referências da tarefa. Horas planejadas não criam sessões; apenas salvar o tempo realmente estudado alimenta o gráfico. As relações com o bloco e a ocorrência ficam no histórico de sessões.
+
+O campo opcional `agenda` no documento privado mantém compatibilidade com backups anteriores. Repetições usam datas locais e exceções por ocorrência; a sincronização e a importação preservam os vínculos mesmo quando há IDs iguais em registros diferentes. Não foi necessária alteração de tabela, política RLS ou chave de acesso.
+
+`node tests/agenda.cjs` verifica calendário, anos bissextos, repetição, término, exceções movidas entre semanas, sobreposição, duplicação, arrastar com revisão, integração com tarefas/Foco, persistência, backups e as duas visualizações em sete larguras de tela. A suíte de autenticação também cobre a importação de horários com conflitos de identificadores.
+
 A aba Tarefas agrupa os registros por matéria e mantém os que não têm matéria em Geral. Há busca por tarefa ou referência, filtros por status e prazo e progresso por matéria. Cada tarefa aceita até 12 referências (livro, aula, artigo, link ou outro), com título, detalhes como capítulo/páginas e link opcional. Também é possível vincular uma aula cadastrada no Órbita.
 
 As referências acompanham a tarefa no Foco. O tempo salvo mantém o vínculo com a tarefa e alimenta o gráfico e a matéria; a conclusão é explícita. Quando a tarefa está vinculada a uma aula, concluir ou reabrir atualiza o progresso correspondente do curso. Referências e vínculos são preservados nos backups e na sincronização, incluindo importações com IDs conflitantes.

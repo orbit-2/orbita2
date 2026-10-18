@@ -18,7 +18,7 @@ console.log('PASS: daily aggregation, future/invalid data, zero state, leap year
 
 async function browserTests(){
  const {chromium}=require(process.env.ORBITA_PLAYWRIGHT_MODULE||'playwright');
- const allowed=new Set(['index.html','app.js','styles.css','auth.js','auth.css','study-chart.js','study-chart.css','courses.js','courses.css','tasks.js','tasks.css','vendor/supabase-2.118.0.js']);
+ const allowed=new Set(['index.html','app.js','styles.css','auth.js','auth.css','study-chart.js','study-chart.css','courses.js','courses.css','tasks.js','tasks.css','agenda.js','agenda.css','vendor/supabase-2.118.0.js']);
  const server=http.createServer((req,res)=>{const file=new URL(req.url,'http://localhost').pathname.slice(1)||'index.html';if(file==='config.js'){res.setHeader('Content-Type','text/javascript');return res.end('window.ORBITA_CONFIG={enabled:false}');}if(!allowed.has(file)){res.writeHead(404);return res.end();}res.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':'text/html');res.end(fs.readFileSync(path.join(root,file)));});
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const origin='http://127.0.0.1:'+server.address().port;
  const browser=await chromium.launch({channel:'msedge',headless:true});
@@ -37,7 +37,7 @@ async function browserTests(){
     assert(count===(scale==='week'?7:scale==='month'?new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate():new Date().getFullYear()%4===0?366:365));
     const slider=page.getByRole('slider');await slider.focus();await slider.press('Home');assert.equal(await slider.getAttribute('aria-valuenow'),'0');await slider.press('ArrowRight');assert.equal(await slider.getAttribute('aria-valuenow'),'1');await slider.press('End');assert.equal(await slider.getAttribute('aria-valuenow'),String(count-1));
     const box=await slider.boundingBox();await slider.click({position:{x:box.width*.4,y:box.height*.5}});assert(Number(await slider.getAttribute('aria-valuenow'))>0);
-    if(width<=750)assert(await page.evaluate(()=>document.querySelectorAll('#mobilebar button').length===7&&document.querySelector('#mobilebar').scrollWidth<=innerWidth+1));
+    if(width<=750)assert(await page.evaluate(()=>document.querySelectorAll('#mobilebar button').length===tabs.length&&document.querySelector('#mobilebar').scrollWidth<=innerWidth+1));
    }
   }
   console.log('PASS: all scales at seven widths, all daily points, keyboard/pointer exploration, no overflow and mobile navigation intact.');
