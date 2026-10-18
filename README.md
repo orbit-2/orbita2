@@ -47,6 +47,10 @@ Para usar a [YouTube Data API oficial](https://developers.google.com/youtube/dat
 
 ## Testes
 
+A personalização em Ajustes oferece 20 temas (claros e escuros), oito fundos desenhados em CSS, intensidade do fundo, duas cores pessoais, quatro famílias de fontes locais, cartões suaves ou sólidos e controles de texto, arredondamento e espaçamento. Quatro combinações prontas aplicam tema, fundo e fonte sem alterar estudos ou metas. A troca individual de tema restaura apenas as duas cores; o botão de restauração geral afeta somente a aparência. Não há dependência de imagens, fontes remotas ou novas permissões.
+
+As preferências são normalizadas no documento privado existente e acompanham backups e sincronização. Backups anteriores recebem os padrões para campos novos. Cores personalizadas mantêm os preenchimentos escolhidos; textos de destaque e links usam uma cor legível quando o contraste da escolha é insuficiente. `node tests/appearance.cjs` verifica seleção, contraste, persistência, compatibilidade, sete larguras, quatro fontes, texto ampliado e as oito abas. A suíte de autenticação verifica também as preferências em outro dispositivo com transporte simulado.
+
 A aba Agenda reúne a grade semanal e uma sequência diária (padrão em telas pequenas). É possível criar compromissos únicos ou rotinas semanais em vários dias, definir um término opcional, alterar ou cancelar só uma ocorrência, editar a rotina completa, duplicar blocos e arrastá-los para abrir uma revisão do horário. A grade mantém os blocos sobrepostos acessíveis em colunas e o formulário avisa sobre conflitos na primeira semana da rotina antes de permitir uma sobreposição explícita.
 
 As tarefas podem ser agendadas pela lista ou pelo painel de tarefas da Agenda. Durante o Foco, continuam disponíveis a matéria e as referências da tarefa. Horas planejadas não criam sessões; apenas salvar o tempo realmente estudado alimenta o gráfico. As relações com o bloco e a ocorrência ficam no histórico de sessões.
